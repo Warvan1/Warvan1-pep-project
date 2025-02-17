@@ -80,8 +80,8 @@ public class AccountDAO {
             if(pkrs.next()){
                 return new Account(
                     pkrs.getInt("account_id"), 
-                    pkrs.getString("username"), 
-                    pkrs.getString("password")
+                    account.getUsername(),
+                    account.getPassword()
                 );
             }
         }

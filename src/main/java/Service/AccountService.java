@@ -18,7 +18,7 @@ public class AccountService {
         if(account.getUsername() == null || account.getUsername() == "" || account.password.length() < 4){
             return null;
         }
-        if(accountDAO.getAccountWithUsername(account.getUsername()) == null){
+        if(accountDAO.getAccountWithUsername(account.getUsername()) != null){
             return null;
         }
         return accountDAO.insertNewAccount(account);
