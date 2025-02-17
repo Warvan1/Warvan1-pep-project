@@ -5,40 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-// import java.util.ArrayList;
-// import java.util.List;
 
 import Model.Account;
 import Util.ConnectionUtil;
 
 public class AccountDAO {
-
-    // public List<Account> getAllAccounts(){
-    //     Connection con = ConnectionUtil.getConnection();
-    //     List<Account> accountList = new ArrayList<>();
-
-    //     try{
-    //         String sql = "select * from account";
-    //         PreparedStatement ps = con.prepareStatement(sql);
-            
-    //         ResultSet rs =  ps.executeQuery();
-
-    //         while(rs.next()){
-    //             Account account = new Account(
-    //                 rs.getInt("account_id"), 
-    //                 rs.getString("username"), 
-    //                 rs.getString("password")
-    //             );
-    //             accountList.add(account);
-    //         }
-    //     }
-    //     catch(SQLException e){
-    //         e.printStackTrace();
-    //     }
-
-    //     return accountList;
-    // }
-
     public Account getAccountWithUsername(String username){
         Connection con = ConnectionUtil.getConnection();
 

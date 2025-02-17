@@ -41,7 +41,10 @@ public class SocialMediaController {
         app.post("login", this::postLoginHandler);
         app.post("messages", this::postMessagesHandler);
         app.get("messages", this::getMessagesHandler);
-        app.get("messages/{message_id}", this::getMessageWithID);
+        app.get("messages/{message_id}", this::getMessageByIDHandler);
+        app.delete("messages/{message_id}", this::deleteMessageByIDHandler);
+        app.patch("messages/{message_id}", this::patchMessageByIDHandler);
+        app.get("accounts/{account_id}/messages", this::getMessagesFromAccountHandler);
 
         return app;
     }
@@ -110,7 +113,7 @@ public class SocialMediaController {
         ctx.json(messageList);
     }
 
-    private void getMessageWithID(Context ctx){
+    private void getMessageByIDHandler(Context ctx){
         int message_id = Integer.parseInt(ctx.pathParam("message_id"));
         Message message = messageService.getMessageWithID(message_id);
         if(message == null){
@@ -121,4 +124,39 @@ public class SocialMediaController {
         }
     }
 
+    private void deleteMessageByIDHandler(Context ctx){
+        int message_id = Integer.parseInt(ctx.pathParam("message_id"));
+        Message message = messageService.deleteMessageWithID(message_id);
+        if(message == null){
+            ctx.result("");
+        }
+        else{
+            ctx.json(message);
+        }
+    }
+
+    private void patchMessageByIDHandler(Context ctx){
+        try{
+            int message_id = Integer.parseInt(ctx.pathParam("message_id"));
+            String jsonString = ctx.body();
+            Message messageBody = om.readValue(jsonString, Message.class);
+
+            Message message = messageService.updateMessageWithID(message_id, messageBody.getMessage_text());
+            if(message == null){
+                ctx.status(400);
+            }
+            else{
+                ctx.json(message);
+            }
+        }
+        catch(JsonProcessingException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void getMessagesFromAccountHandler(Context ctx){
+        int account_id = Integer.parseInt(ctx.pathParam("account_id"));
+        List<Message> messageList = messageService.getAllMessagesFromAccount(account_id);
+        ctx.json(messageList);
+    }
 }
