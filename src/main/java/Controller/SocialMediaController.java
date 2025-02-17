@@ -59,8 +59,7 @@ public class SocialMediaController {
 
     private void postRegisterHandler(Context ctx){
         try{
-            String jsonString = ctx.body();
-            Account account = om.readValue(jsonString, Account.class);
+            Account account = om.readValue(ctx.body(), Account.class);
             Account newAccount = accountService.addAccount(account);
             if(newAccount == null){
                 ctx.status(400);
@@ -76,8 +75,7 @@ public class SocialMediaController {
 
     private void postLoginHandler(Context ctx){
         try{
-            String jsonString = ctx.body();
-            Account account = om.readValue(jsonString, Account.class);
+            Account account = om.readValue(ctx.body(), Account.class);
             Account loggedInAccount = accountService.login(account);
             if(loggedInAccount == null){
                 ctx.status(401);
@@ -93,8 +91,7 @@ public class SocialMediaController {
 
     private void postMessagesHandler(Context ctx){
         try{
-            String jsonString = ctx.body();
-            Message message = om.readValue(jsonString, Message.class);
+            Message message = om.readValue(ctx.body(), Message.class);
             Message newMessage = messageService.addMessage(message);
             if(newMessage == null){
                 ctx.status(400);
@@ -138,8 +135,7 @@ public class SocialMediaController {
     private void patchMessageByIDHandler(Context ctx){
         try{
             int message_id = Integer.parseInt(ctx.pathParam("message_id"));
-            String jsonString = ctx.body();
-            Message messageBody = om.readValue(jsonString, Message.class);
+            Message messageBody = om.readValue(ctx.body(), Message.class);
 
             Message message = messageService.updateMessageWithID(message_id, messageBody.getMessage_text());
             if(message == null){
