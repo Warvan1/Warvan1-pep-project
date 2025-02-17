@@ -5,8 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+// import java.util.ArrayList;
+// import java.util.List;
 
 import Model.Account;
 import Util.ConnectionUtil;
@@ -47,6 +47,32 @@ public class AccountDAO {
             PreparedStatement ps = con.prepareStatement(sql);
 
             ps.setString(1, username);
+            
+            ResultSet rs =  ps.executeQuery();
+
+            while(rs.next()){
+                return new Account(
+                    rs.getInt("account_id"), 
+                    rs.getString("username"), 
+                    rs.getString("password")
+                );
+            }
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public Account getAccountWithAccountID(int account_id){
+        Connection con = ConnectionUtil.getConnection();
+
+        try{
+            String sql = "select * from account where account_id = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setInt(1, account_id);
             
             ResultSet rs =  ps.executeQuery();
 

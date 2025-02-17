@@ -1,10 +1,14 @@
 package Controller;
 
+import java.util.List;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Model.Account;
+import Model.Message;
 import Service.AccountService;
+import Service.MessageService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
@@ -15,10 +19,12 @@ import io.javalin.http.Context;
  */
 public class SocialMediaController {
     AccountService accountService;
+    MessageService messageService;
     ObjectMapper om;
 
     public SocialMediaController(){
         this.accountService = new AccountService();
+        this.messageService = new MessageService();
         this.om = new ObjectMapper();
     }
 
@@ -33,6 +39,9 @@ public class SocialMediaController {
 
         app.post("register", this::postRegisterHandler);
         app.post("login", this::postLoginHandler);
+        app.post("messages", this::postMessagesHandler);
+        app.get("messages", this::getMessagesHandler);
+        app.get("messages/{message_id}", this::getMessageWithID);
 
         return app;
     }
@@ -79,5 +88,37 @@ public class SocialMediaController {
         }
     }
 
+    private void postMessagesHandler(Context ctx){
+        try{
+            String jsonString = ctx.body();
+            Message message = om.readValue(jsonString, Message.class);
+            Message newMessage = messageService.addMessage(message);
+            if(newMessage == null){
+                ctx.status(400);
+            }
+            else{
+                ctx.json(newMessage);
+            }
+        }
+        catch(JsonProcessingException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void getMessagesHandler(Context ctx){
+        List<Message> messageList = messageService.getAllMessages();
+        ctx.json(messageList);
+    }
+
+    private void getMessageWithID(Context ctx){
+        int message_id = Integer.parseInt(ctx.pathParam("message_id"));
+        Message message = messageService.getMessageWithID(message_id);
+        if(message == null){
+            ctx.result("");
+        }
+        else{
+            ctx.json(message);
+        }
+    }
 
 }
