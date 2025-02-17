@@ -23,4 +23,8 @@ public class AccountService {
         }
         return accountDAO.insertNewAccount(account);
     }
+    
+    public Account login(Account account){
+        return accountDAO.getAccountWithUsernameAndPassword(account);
+    }
 }

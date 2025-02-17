@@ -32,6 +32,7 @@ public class SocialMediaController {
         app.get("example-endpoint", this::exampleHandler);
 
         app.post("register", this::postRegisterHandler);
+        app.post("login", this::postLoginHandler);
 
         return app;
     }
@@ -54,6 +55,23 @@ public class SocialMediaController {
             }
             else{
                 ctx.json(newAccount);
+            }
+        }
+        catch(JsonProcessingException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void postLoginHandler(Context ctx){
+        try{
+            String jsonString = ctx.body();
+            Account account = om.readValue(jsonString, Account.class);
+            Account loggedInAccount = accountService.login(account);
+            if(loggedInAccount == null){
+                ctx.status(401);
+            }
+            else{
+                ctx.json(loggedInAccount);
             }
         }
         catch(JsonProcessingException e){
